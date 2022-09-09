@@ -5,8 +5,11 @@ import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.ksp.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-internal class TransformativeProcessor(private val codegen: CodeGenerator, private val logger: KSPLogger) :
-  SymbolProcessor {
+internal class TransformativeProcessor(
+  private val codegen: CodeGenerator,
+  private val transform: Boolean,
+  private val mutableCopy: Boolean
+) : SymbolProcessor {
 
   private val done = AtomicBoolean(false)
 
@@ -28,7 +31,9 @@ internal class TransformativeProcessor(private val codegen: CodeGenerator, priva
   }
 
   private fun processClass(klass: KSClassDeclaration) {
-    klass.toTransformFunctionKt().writeTo(codeGenerator = codegen, aggregating = false)
-    klass.toMutableCopyKt().writeTo(codeGenerator = codegen, aggregating = false)
+    if (transform)
+      klass.toTransformFunctionKt().writeTo(codeGenerator = codegen, aggregating = false)
+    if (mutableCopy)
+      klass.toMutableCopyKt().writeTo(codeGenerator = codegen, aggregating = false)
   }
 }

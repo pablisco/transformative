@@ -12,7 +12,6 @@ import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Paths
 
-private const val THIS_VERSION = "0.1-SNAPSHOT"
 private const val SOURCE_FILENAME = "Source.kt"
 
 public fun String.failsWith(provider: SymbolProcessorProvider, check: (String) -> Boolean) {
@@ -53,9 +52,7 @@ private fun buildCompilation(
   text: String,
   provider: SymbolProcessorProvider,
 ) = KotlinCompilation().apply {
-  classpaths = listOf(
-    "transformative-types:$THIS_VERSION"
-  ).map { classpathOf(it) }
+  classpaths = emptyList<String>().map { classpathOf(it) }
   symbolProcessorProviders = listOf(provider)
   sources = listOf(SourceFile.kotlin(SOURCE_FILENAME, text.trimMargin()))
 }
